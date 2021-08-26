@@ -20,7 +20,7 @@ help()
     echo "          -q      query (opens a sqlite database)"
     echo "      input:"
     echo "          -w and -q accept a quoted argument to be used"
-    echo "          as the girnel entry or sqlite query respectively."
+    echo "          as the girnel entry or sqlite query respectively"
 }
 
 declare -A PROJECT
@@ -30,7 +30,7 @@ git_check()
 {
     if [[ $(git status 2> /dev/null) == "" ]]
     then
-        echo "Girnel requires a Git repository."
+        echo "girnel requires a git repository"
         exit 1
     fi
 }
@@ -39,7 +39,7 @@ girnel_check()
 {
     if [[ $(ls $GIRNEL 2> /dev/null) == "" ]]
     then
-        echo ".girnel missing from project root."
+        echo ".girnel missing from project root"
         exit 1
     fi
 }
@@ -58,5 +58,7 @@ setup()
     GIRNEL="${PROJECT['repository']}/.girnel"
     girnel_check
 }
+
+setup
 
 
