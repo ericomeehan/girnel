@@ -63,9 +63,9 @@ setup()
 
 compose()
 {
-    touch /tmp/girnel.txt
-    vim /tmp/girnel.txt
-    ENTRY="$(cat /tmp/girnel.txt)"
+    touch /tmp/girnel
+    vim /tmp/girnel
+    ENTRY="$(cat /tmp/girnel)"
     if [[ $ENTRY == "" ]]
     then
         echo "No body written, canceling entry."
@@ -102,11 +102,20 @@ DB_SCHEMA="CREATE TABLE entries (
         message TEXT NOT NULL
     );"
 
+declare -A ENTRY=(
+    ['author']=""
+    ['date']=""
+    ['time']=""
+    ['branch']=""
+    ['commit']=""
+    ['message']=""
+)
+
 insert()
 {
-    sqlite /tmp/girnel.db "
+    sqlite3 /tmp/girnel.db "
         INSERT INTO entries (
-            author, date, time, branch, hash, mesage
+            author, date, time, branch, hash, message
         ) VALUES (
             \"${ENTRY['author']}\",
             \"${ENTRY['date']}\",
@@ -120,7 +129,7 @@ insert()
 create_db()
 {
     touch /tmp/girnel.db
-    sqlite /tmp/girnel.db "$DB_SCHEMA"
+    sqlite3 /tmp/girnel.db "$DB_SCHEMA"
 
     while IFS='' read -r line || [ -n "${line}" ]
     do
@@ -129,6 +138,14 @@ create_db()
             if [[ ${ENTRY['message']} != "" ]]
             then
                 insert
+                ENTRY=(
+                    ['author']=""
+                    ['date']=""
+                    ['time']=""
+                    ['branch']=""
+                    ['commit']=""
+                    ['message']=""
+                )
             fi
         elif [[ $line =~ "Author:" ]]
         then
@@ -219,4 +236,5 @@ main()
     fi
 }
 
-main
+setup
+main "$@"
