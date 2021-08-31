@@ -156,12 +156,67 @@ create_db()
             fi
         fi
     done < $GIRNEL
+    insert
 }
 
+query()
+{
+    create_db
+    if [[ $# -ge 1 ]]
+    then
+        sqlite3 /tmp/girnel.db "$1"
+    else
+        sqlite3 /tmp/girnel.db
+    fi
+    if [[ $(ls /tmp/girnel.db 2> /dev/null) != "" ]]
+    then
+        rm /tmp/girnel.db
+    fi
+}
 
+main()
+{
+    declare -A OPTIONS=(
+        ['-r']=false
+        ['-w']=false
+        ['-q']=false
+    )
 
+    if [[ $# -eq 0 ]]
+    then
+        compose
+        write
+    else
+        if [[ "$1" != "-r" && "$1" != "-w" && "$1" != "-q" ]]
+        then
+            help
+        else
+            OPTIONS["$1"]=true
+        fi
+    fi
 
+    if [[ ${OPTIONS['-r']} == "true" ]]
+    then
+        less $GIRNEL
+    elif [[ ${OPTIONS['-w']} == "true" ]]
+    then
+        if [[ $# -gt 1 ]]
+        then
+            echo "$2" > /tmp/girnel
+            write
+        else
+            compose
+            write
+        fi
+    elif [[ ${OPTIONS['-q']} == "true" ]]
+    then
+        if [[ $# -gt 1 ]]
+        then
+            query "$2"
+        else
+            query
+        fi
+    fi
+}
 
-
-
-
+main
