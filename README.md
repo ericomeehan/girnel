@@ -8,8 +8,8 @@ A journel for git repositories.
 # Introduction
 
 Girnel is a light weight, searchable journal for git repositories that allows
-developers to track their research and decision making process alongside the 
-changes in code.
+developers to track their research and decision making process alongside changes
+in code.
 
 Create a .girnel file in the root of your project repository, then use the girnel.sh 
 script to add entries, read, and query the girnel.  New entries are given a 
